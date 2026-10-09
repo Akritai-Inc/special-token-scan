@@ -13,7 +13,7 @@ from . import __version__
 from .core import Scanner
 from .errors import ScanError
 from .output import Aggregate, shareable, write_json
-from .readers import infer_format, records
+from .readers import detect_format, infer_format, records
 from .schema import Limits
 from .tokenizer import digest, load_tokenizer, sha256
 
@@ -124,6 +124,8 @@ def run(args):
     try:
         if not args.aggregate_only:
             output = (args.out / "records.jsonl").open("w", encoding="utf-8", newline="\n")
+        fmt = detect_format(args.input, args.format, limits)
+        summary["input"]["format"] = fmt
         iterator = records(args.input, fmt, limits)
         selected = itertools.islice(iterator, args.limit) if args.limit else iterator
         try:

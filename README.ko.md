@@ -49,7 +49,7 @@ space: literal records=1, encoded records=1, special IDs=1, non-special added ID
 special-token-scan train.jsonl --tokenizer <모델 저장소> --revision <커밋> --out results
 ```
 
-- **입력**: `.jsonl`, `.ndjson`, `.json`(각각 `.gz` 지원), `.parquet`(`parquet` 추가 설치 필요). 역할, 메타데이터, 알 수 없는 필드를 포함한 모든 문자열 값을 검사합니다.
+- **입력**: `.jsonl`, `.ndjson`, `.json`(각각 `.gz` 지원), `.parquet`(`parquet` 추가 설치 필요). 각 줄에 JSON 값이 하나씩 있는 `.json` 파일은 JSON Lines로 읽습니다. 역할, 메타데이터, 알 수 없는 필드를 포함한 모든 문자열 값을 검사합니다.
 - **토크나이저**: Hugging Face 모델 저장소를 지정하며, 결과를 재현할 수 있도록 `--revision`에 40자리 커밋을 입력합니다. 커밋은 모델 페이지의 "Files and versions"에서 찾거나 아래 명령어로 확인할 수 있습니다.
 
   ```bash
@@ -98,7 +98,7 @@ special-token-scan은 외부로 데이터를 전송하지 않습니다. `records
 | `--aggregate-only` | `records.jsonl` 파일을 생성하지 않음 |
 | `--joins concat` / `--joins space` | 두 가지 이어 붙이기 방식 중 하나만 실행 |
 | `--split-special-tokens` | special token 분리 옵션을 활성화하여 토큰화 후 비교 |
-| `--format json\|jsonl\|parquet` | 파일 이름으로 결정되는 형식을 수동으로 지정 |
+| `--format json\|jsonl\|parquet` | 자동으로 판별된 형식 대신 직접 지정 |
 | `--max-…` | 크기 제한 변경(기본값: JSONL 한 줄 16 MiB, JSON 파일 64 MiB, 중첩 깊이 64) |
 
 오류 코드는 [docs/ERRORS.md](docs/ERRORS.md), 출력 필드는 [docs/OUTPUT.md](docs/OUTPUT.md)를 참고하세요.

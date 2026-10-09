@@ -49,7 +49,7 @@ The example file has four records. Two of them show the two cases special-token-
 special-token-scan train.jsonl --tokenizer <model repo> --revision <commit> --out results
 ```
 
-- **Input**: `.jsonl`, `.ndjson`, `.json` (each optionally `.gz`), or `.parquet` (needs the `parquet` extra). Every string value is checked, including roles, metadata, and unknown fields.
+- **Input**: `.jsonl`, `.ndjson`, `.json` (each optionally `.gz`), or `.parquet` (needs the `parquet` extra). A `.json` file with one JSON value per line is read as JSON Lines. Every string value is checked, including roles, metadata, and unknown fields.
 - **Tokenizer**: a Hugging Face model repository with `--revision` set to a full 40-character commit, so results stay reproducible. Find the commit on the model page under "Files and versions", or run:
 
   ```bash
@@ -98,7 +98,7 @@ Other options:
 | `--aggregate-only` | Skip `records.jsonl` |
 | `--joins concat` / `--joins space` | Run only one of the two join views |
 | `--split-special-tokens` | Tokenize with special-token splitting turned on, to compare |
-| `--format json\|jsonl\|parquet` | Override the format detected from the file name |
+| `--format json\|jsonl\|parquet` | Override automatic format detection |
 | `--max-…` | Change size limits (defaults: 16 MiB per JSONL line, 64 MiB per JSON file, nesting depth 64) |
 
 Error codes are listed in [docs/ERRORS.md](docs/ERRORS.md), and the output fields in [docs/OUTPUT.md](docs/OUTPUT.md).

@@ -56,6 +56,42 @@ def infer_format(path, requested="auto"):
     raise ScanError("E_FORMAT")
 
 
+def detect_format(path, requested="auto", limits=Limits()):
+    """Disambiguate .json using a bounded probe; explicit formats never probe."""
+    fmt = infer_format(path, requested)
+    if requested != "auto" or fmt != "json":
+        return fmt
+    opener = gzip.open if str(path).lower().endswith(".gz") else open
+    try:
+        with opener(path, "rb") as stream:
+            remaining = limits.json_bytes + 1
+            while remaining:
+                line = stream.readline(remaining)
+                remaining -= len(line)
+                if not line:
+                    return "json"
+                if line.strip(b" \t\r\n"):
+                    break
+            else:
+                return "json"
+            while remaining:
+                chunk = stream.read(min(remaining, 8192))
+                remaining -= len(chunk)
+                if not chunk:
+                    break
+                if chunk.strip(b" \t\r\n"):
+                    # Parse only when another value could follow. Single JSON
+                    # documents without further content are parsed by the reader.
+                    try:
+                        parse(line)
+                    except ScanError:
+                        return "json"
+                    return "jsonl"
+    except (OSError, EOFError, zlib.error):
+        raise ScanError("E_READ") from None
+    return "json"
+
+
 def _check_arrow_type(t, pa):
     if pa.types.is_map(t) or pa.types.is_union(t):
         raise ScanError("E_PARQUET_TYPE")
@@ -73,7 +109,7 @@ def _check_arrow_type(t, pa):
 def records(path, fmt="auto", limits=Limits()):
     """Yield (zero-based record index, row or ScanError). File errors are fatal."""
     path = Path(path)
-    fmt = infer_format(path, fmt)
+    fmt = detect_format(path, fmt, limits)
     try:
         if fmt == "parquet":
             try:
