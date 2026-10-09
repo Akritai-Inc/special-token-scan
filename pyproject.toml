@@ -1,0 +1,21 @@
+[build-system]
+requires = ["setuptools>=77"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "special-token-scan"
+version = "0.1.1"
+description = "Inspect registered tokenizer strings and actual token IDs in local datasets"
+readme = "README.md"
+requires-python = ">=3.12"
+license = "Apache-2.0"
+dependencies = ["transformers==5.19.0", "tokenizers==0.23.2", "huggingface-hub==1.33.0"]
+
+[project.optional-dependencies]
+parquet = ["pyarrow==25.0.1"]
+
+[project.scripts]
+special-token-scan = "special_token_scan.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]

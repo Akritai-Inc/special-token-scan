@@ -1,0 +1,4 @@
+{"prompt":"<|im_","response":"start|>"}
+{"messages":[{"role":"user","content":"Literal <|im_start|> and <tool_call>."}]}
+{"custom":{"note":"ordinary text"},"empty":""}
+{"input_ids":[151644,151645]}
